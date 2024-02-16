@@ -1,0 +1,55 @@
+! font
+URxvt.font: xft:MonoLisa:size=17
+URxvt.boldFont: xft:MonoLisa:style=Bold:size=17
+URxvt.italicFont: xft:MonoLisa:style=Regular Italic:size=17
+URxvt.boldItalicFont: xft:MonoLisa:style=Bold Italic:size=17
+
+! special
+URxvt.background: [95]#232136
+URxvt.foreground: #C5C8C6
+URxvt.cursorColor: #C9C9C9
+
+! black
+URxvt.color0: #1D1F21
+URxvt.color8: #666666
+
+! red
+URxvt.color1: #CC6666
+URxvt.color9: #D54E53
+
+! green
+URxvt.color2: #B5BD68
+URxvt.color10: #B9CA4A
+
+! yellow
+URxvt.color3: #F0C674
+URxvt.color11: #E7C547
+
+! blue
+URxvt.color4: #81A2BE
+URxvt.color12: #7AA6DA
+
+! magenta
+URxvt.color5: #B294BB
+URxvt.color13: #C397D8
+
+! cyan
+URxvt.color6: #8ABEB7
+URxvt.color14: #70C0B1
+
+! white
+URxvt.color7: #C5C8C6
+URxvt.color15: #EAEAEA
+
+!! URxvt Appearance
+URxvt.letterSpace: 0
+URxvt.lineSpace: 0
+URxvt.internalBorder: 10
+URxvt.cursorBlink: false
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 32
+URxvt.iso14755: false
