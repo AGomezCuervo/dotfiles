@@ -26,18 +26,34 @@ vim.o.smartcase = true
 vim.o.hidden = true -- change between buffers without saving
 vim.o.colorcolumn = "80"
 
--- default size of TAB is 8 spaces. Perfect :)
+-- default size of TAB is 8 spaces
 vim.o.expandtab = true
 vim.o.smartindent = true
 vim.o.autoindent = true
 vim.o.smarttab = true
--- vim.opt.tags:append({'/home/agomez/.config/nvim/tags', 'tags'})
 
-vim.opt.wildignore:append("**/node_modules/**")
+vim.opt.wildignore = "**/node_modules/*"
 vim.o.wildignorecase=true
 vim.opt.path:append("**")
 
 vim.cmd("colorscheme minioding")
+
+
+-- custom commands
+vim.api.nvim_create_user_command(
+  'ChangeIndent',
+  function(opts)
+    local value = tonumber(opts.args)
+    if value then
+      vim.opt.shiftwidth = value
+      vim.opt.tabstop = value
+      print("Shiftwidth y Tabstop cambiados a " .. value)
+    else
+      print("Por favor, proporciona un número válido.")
+    end
+  end,
+  { nargs = 1 }
+)
 
 -- package manager: Lazyvim
 -- Bootstrap lazy.nvim
@@ -104,90 +120,122 @@ vim.cmd("colorscheme minioding")
 
 -- Fzf Plugin
 -- local fzf_actions = require("fzf-lua.actions")
-local fzf = {
-        "ibhagwan/fzf-lua",
-        config = function()
-                vim.keymap.set("n", "<leader>pf", require('fzf-lua').files, { desc = "Fzf Files" })
-                vim.keymap.set("n", "<leader>ps", require('fzf-lua').live_grep, { desc = "Fzf live_grep" })
-                local actions = require "fzf-lua.actions"
-                require'fzf-lua'.setup {
-                        winopts = {
-                                border = false,
-                                fullscreen = true,
-                                preview = {
-                                        hidden = 'hidden',
-                                },
-                        },
-                        keymap = {
-                                builtin = {
-                                        false,
-                                        ["<M-Esc>"] = "hide",
-                                        ["<F1>"] = "toggle-help",
-                                        ["<F2>"] = "toggle-fullscreen",
-                                        ["<F3>"] = "toggle-preview-wrap",
-                                        ["<F4>"] = "toggle-preview",
-                                        ["<F5>"] = "toggle-preview-ccw",
-                                        ["<F6>"] = "toggle-preview-cw",
-                                        ["<S-down>"] = "preview-page-down",
-                                        ["<S-up>"] = "preview-page-up",
-                                        ["<M-S-down>"] = "preview-down",
-                                        ["<M-S-up>"] = "preview-up",
-                                },
-                                fzf = {
-                                        false,
-                                        ["ctrl-z"] = "abort",
-                                        ["ctrl-u"] = "unix-line-discard",
-                                        ["ctrl-f"] = "half-page-down",
-                                        ["ctrl-b"] = "half-page-up",
-                                        ["ctrl-a"] = "beginning-of-line",
-                                        ["ctrl-e"] = "end-of-line",
-                                        ["alt-a"] = "toggle-all",
-                                        ["alt-g"] = "last",
-                                        ["alt-G"] = "first",
-                                        ["f3"]= "toggle-preview-wrap",
-                                        ["f4"]= "toggle-preview",
-                                        ["shift-down"] = "preview-page-down",
-                                        ["shift-up"] = "preview-page-up",
-                                },
-                        },
-                        actions = {
-                                files = {
-                                        false,
-                                        ["ctrl-y"] = actions.file_edit_or_qf,
-                                        ["enter"] = actions.file_edit_or_qf,
-                                        ["ctrl-s"] = actions.file_split,
-                                        ["ctrl-v"] = actions.file_vsplit,
-                                        ["ctrl-t"] = actions.file_tabedit,
-                                        ["alt-q"] = actions.file_sel_to_qf,
-                                        ["alt-Q"] = actions.file_sel_to_ll,
-                                },
-                        },
-                }
-        end
-}
+-- local fzf = {
+--         "ibhagwan/fzf-lua",
+--         config = function()
+--                 vim.keymap.set("n", "<leader>pf", require('fzf-lua').files, { desc = "Fzf Files" })
+--                 vim.keymap.set("n", "<leader>ps", require('fzf-lua').live_grep, { desc = "Fzf live_grep" })
+--                 local actions = require "fzf-lua.actions"
+--                 require'fzf-lua'.setup {
+--                         winopts = {
+--                                 border = false,
+--                                 fullscreen = true,
+--                                 preview = {
+--                                         hidden = 'hidden',
+--                                 },
+--                         },
+--
+--                         grep = {
+--                                 rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --glob '!node_modules/*' --glob '!tags' -e "
+--                         },
+--
+--                         files = {
+--                                 fd_opts = "--exclude node_modules --exclude .git",
+--                         },
+--
+--                         keymap = {
+--                                 builtin = {
+--                                         false,
+--                                         ["<M-Esc>"] = "hide",
+--                                         ["<F1>"] = "toggle-help",
+--                                         ["<F2>"] = "toggle-fullscreen",
+--                                         ["<F3>"] = "toggle-preview-wrap",
+--                                         ["<F4>"] = "toggle-preview",
+--                                         ["<F5>"] = "toggle-preview-ccw",
+--                                         ["<F6>"] = "toggle-preview-cw",
+--                                         ["<S-down>"] = "preview-page-down",
+--                                         ["<S-up>"] = "preview-page-up",
+--                                         ["<M-S-down>"] = "preview-down",
+--                                         ["<M-S-up>"] = "preview-up",
+--                                 },
+--                                 fzf = {
+--                                         false,
+--                                         ["ctrl-z"] = "abort",
+--                                         ["ctrl-u"] = "unix-line-discard",
+--                                         ["ctrl-f"] = "half-page-down",
+--                                         ["ctrl-b"] = "half-page-up",
+--                                         ["ctrl-a"] = "beginning-of-line",
+--                                         ["ctrl-e"] = "end-of-line",
+--                                         ["alt-a"] = "toggle-all",
+--                                         ["alt-g"] = "last",
+--                                         ["alt-G"] = "first",
+--                                         ["f3"]= "toggle-preview-wrap",
+--                                         ["f4"]= "toggle-preview",
+--                                         ["shift-down"] = "preview-page-down",
+--                                         ["shift-up"] = "preview-page-up",
+--                                 },
+--                         },
+--                         actions = {
+--                                 files = {
+--                                         false,
+--                                         ["ctrl-y"] = actions.file_edit_or_qf,
+--                                         ["enter"] = actions.file_edit_or_qf,
+--                                         ["ctrl-s"] = actions.file_split,
+--                                         ["ctrl-v"] = actions.file_vsplit,
+--                                         ["ctrl-t"] = actions.file_tabedit,
+--                                         ["alt-q"] = actions.file_sel_to_qf,
+--                                         ["alt-Q"] = actions.file_sel_to_ll,
+--                                 },
+--                         },
+--                 }
+--         end
+-- }
 
--- Harpoon
-local harpoon = {
-        "ThePrimeagen/harpoon",
-        branch = "harpoon2",
-        dependencies = {
-                "nvim-lua/plenary.nvim"
-        },
-        config = function()
-                local harpoon =  require("harpoon"):setup()
-
-                vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
-                vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
-                vim.keymap.set("n", "<C-j>", function() harpoon:list():select(1) end)
-                vim.keymap.set("n", "<C-k>", function() harpoon:list():select(2) end)
-                vim.keymap.set("n", "<C-l>", function() harpoon:list():select(3) end)
-                vim.keymap.set("n", "<C-n>", function() harpoon:list():select(4) end)
-                vim.keymap.set("n", "<C-m>", function() harpoon:list():select(5) end)
-
-                vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
-                vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
-        end,
+-- Gitsigns
+local git_signs = {
+  "lewis6991/gitsigns.nvim",
+  lazy = false,
+  config = function ()
+    require("gitsigns").setup({
+      signs = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
+      signcolumn = true,
+      numhl      = false,
+      linehl     = false,
+      word_diff  = false,
+      watch_gitdir = {
+        follow_files = true
+      },
+      auto_attach = true,
+      attach_to_untracked = false,
+      current_line_blame = false,
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = 'eol',
+        delay = 1000,
+        ignore_whitespace = false,
+        virt_text_priority = 100,
+      },
+      current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+      sign_priority = 6,
+      update_debounce = 100,
+      status_formatter = nil,
+      max_file_length = 40000,
+      preview_config = {
+        border = 'single',
+        style = 'minimal',
+        relative = 'cursor',
+        row = 0,
+        col = 1
+      },
+    })
+  end
 }
 
 -- Treesitter Plugin
@@ -210,15 +258,6 @@ local treesitter = {
                         highlight = {
                                 enable = true,
                         },
-                        incremental_selection = {
-                                enable = true,
-                                keymaps = {
-                                        init_selection = '<CR>',
-                                        scope_incremental = '<CR>',
-                                        node_incremental = '<TAB>',
-                                        node_decremental = '<S-TAB>',
-                                },
-                        }
                 })
         end
 }
@@ -350,10 +389,10 @@ local nvim_cmp = {
 require("lazy").setup({
         spec = {
                 treesitter,
-                fzf,
-                harpoon,
+                -- fzf,
                 lsp,
-                nvim_cmp
+                nvim_cmp,
+                git_signs,
         },
         install = { colorscheme = { "minioding" } },
 })

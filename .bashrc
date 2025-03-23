@@ -114,3 +114,7 @@ fi
 
 export PATH=$PATH:/usr/local/go/bin
 bind 'set completion-ignore-case on'
+
+stty -ixon
+
+export JUAN="192.168.10.27"
