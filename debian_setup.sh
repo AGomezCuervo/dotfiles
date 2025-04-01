@@ -12,6 +12,7 @@ sudo apt install -y \
         curl \
         git \
         dkms \
+        maim \
         linux-headers-$(uname -r) \
         htop \
         unzip \
@@ -21,12 +22,17 @@ sudo apt install -y \
         gcc \
         make \
         clang \
-        pulseaudio \
+        pipewire \
+        pipewire-audio \
+        pipewire-pulse \
+        piperwire-audio-client-libraries \
+        wireplumber \
         alsa-utils \
         xorg \
         libx11-dev \
         libxext-dev \
         libxft-dev \
+        xclip \
         iwd \
         pkg-config \
         libxinerama-dev
@@ -73,7 +79,6 @@ sudo apt install -y \
         firefox-esr \
 
 #Instalar nvidia drivers
-
 sudo apt install -y \
         nvidia-detect \
         nvidia-driver \
@@ -86,5 +91,4 @@ sudo apt clean
 # Finalización
 echo "Instalación completada. Por favor, reinicie su sistema para que los cambios tengan efecto."
 
-# Fin del script
 exit 0

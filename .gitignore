@@ -1,0 +1,8 @@
+.config/chromium/
+.config/systemd/
+.config/go/
+.config/neofetch/
+.config/pulse/
+
+.config/droidcam
+.config/mimeapps.list
