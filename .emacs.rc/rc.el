@@ -1,3 +1,6 @@
+;; Rexim/Tsoding package manager for emacs, it can be found in:
+;; https://github.com/rexim/dotfiles/blob/master/.emacs.rc/rc.el
+
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives
