@@ -47,7 +47,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod4Mask
+#define MODKEY Mod3Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -78,7 +78,7 @@ static const Key keys[] = {
         { 0, XF86XK_MonBrightnessDown, spawn, {.v = dimmer } },
         { 0, XF86XK_MonBrightnessUp,   spawn, {.v = brighter } },
         { 0, XK_Print,                 spawn, {.v = screenshot } },
-        { MODKEY|ShiftMask, XK_p,      spawn, {.v = screenshot_save } },
+        { Mod1Mask|ShiftMask, XK_p,      spawn, {.v = screenshot_save } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	// { MODKEY,                       XK_b,      togglebar,      {0} },
