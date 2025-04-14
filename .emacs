@@ -3,18 +3,28 @@
 ; load files
 (load-file "~/.emacs.rc/rc.el")
 (load-file "~/.emacs.rc/org.el")
+(add-to-list 'load-path "~/.emacs.local/")
+
+; set defaults
+(setq-default inhibit-splash-screen t
+	tab-width 8
+	standard-indent 8
+	indent-tabs-mode t
+	tab-always-indent nil
+	ring-bell-function 'ignore)
 
 ; set variables
 (setq custom-file "~/.emacs.custom.el")
 (setq inhibit-startup-message t)
-(setq ring-bell-function 'ignore)
-(setq tab-always-indent nil)
 
 (setq backup-directory-alist '((".*" . "~/.emacs.d/backups/")))
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t)))
 (setq auto-save-list-file-prefix "~/.emacs.d/auto-saves/.saves-")
 
 ; require packages
+(require 'simpc-mode)
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+
 (rc/require-theme 'gruber-darker)
 (rc/require 'company)
 (rc/require 'move-text)
@@ -28,8 +38,8 @@
 (set-frame-font "MonoLisa 15" nil t)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq scroll-conservatively 101)
-(setq scroll-step 1)            
-(setq scroll-margin 5)          
+(setq scroll-step 1)
+(setq scroll-margin 5)
 
 ; keymapping
 (global-set-key (kbd "M-p")         'move-text-up)
@@ -45,7 +55,6 @@
 (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
-(global-set-key (kbd "C-,")         'duplicate-line)
 
 ; editor config
 (menu-bar-mode 0)
