@@ -2,6 +2,7 @@
 (setq org-return-follows-link  t)
 (setq org-startup-indented t)
 (setq org-pretty-entities t)
+(setq org-use-sub-superscripts nil)
 
 (defun my/org-auto-export-to-latex ()
   "Exporta automáticamente el archivo Org a LaTeX."

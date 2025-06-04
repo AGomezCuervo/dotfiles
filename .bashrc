@@ -117,5 +117,5 @@ bind 'set completion-ignore-case on'
 
 stty -ixon
 
-export tintin="juan@192.168.10.27"
-export tin="192.168.10.27"
+export tintin="juan@192.168.10.19"
+export tin="192.168.10.19"

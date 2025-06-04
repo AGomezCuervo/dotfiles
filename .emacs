@@ -7,8 +7,8 @@
 
 ; set defaults
 (setq-default inhibit-splash-screen t
-	tab-width 8
-	standard-indent 8
+	tab-width 4
+	standard-indent 4
 	indent-tabs-mode t
 	tab-always-indent nil
 	ring-bell-function 'ignore)
@@ -16,6 +16,8 @@
 ; set variables
 (setq custom-file "~/.emacs.custom.el")
 (setq inhibit-startup-message t)
+(setq company-idle-delay nil)
+(setq company-minimum-prefix-length 1)
 
 (setq backup-directory-alist '((".*" . "~/.emacs.d/backups/")))
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves/" t)))
@@ -24,12 +26,17 @@
 ; require packages
 (require 'simpc-mode)
 (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
 (rc/require-theme 'gruber-darker)
 (rc/require 'company)
+(rc/require 'web-mode)
+(rc/require 'typescript-mode)
 (rc/require 'move-text)
+(rc/require 'markdown-mode)
 (rc/require 'smex)
 (rc/require 'multiple-cursors)
+(rc/require 'vue-mode)
 
 ; global config
 (prefer-coding-system 'utf-8)
@@ -40,13 +47,19 @@
 (setq scroll-conservatively 101)
 (setq scroll-step 1)
 (setq scroll-margin 5)
+(setq mmm-submode-decoration-level 0)
+(setq js-indent-level 2)
+(setq typescript-indent-level 2)
+(setq css-indent-offset 2)
+(setq sgml-basic-offset 2)
+
 
 ; keymapping
 (global-set-key (kbd "M-p")         'move-text-up)
 (global-set-key (kbd "M-n")         'move-text-down)
 (global-set-key (kbd "M-x")         'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-(global-set-key (kbd "M-\\")        'Company-complete)
+(global-set-key (kbd "M-/") 'company-complete)
 
 ; multiple cursors
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -65,30 +78,30 @@
 (ido-everywhere 1)
 (global-display-line-numbers-mode 1)
 
+; formatter
+(defun astyle-buffer ()
+  (interactive)
+  (let ((saved-line-number (line-number-at-pos)))
+    (shell-command-on-region
+     (point-min)
+     (point-max)
+     "astyle --style=kr"
+     nil
+     t)
+    (goto-line saved-line-number)))
+
 ;;; Whitespace mode
 (defun rc/set-up-whitespace-handling ()
   (interactive)
   (whitespace-mode 1)
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
 
-(add-hook 'tuareg-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'c++-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'simpc-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'rc/set-up-whitespace-handling)
-(add-hook 'java-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'lua-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'scala-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'erlang-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'asm-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'fasm-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'go-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'nim-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'rc/set-up-whitespace-handling)
-(add-hook 'porth-mode-hook 'rc/set-up-whitespace-handling)
+
+(defun my-markdown-mode-hook ()
+  (setq markdown-font-lock-keywords
+        (remove '("_" . 'markdown-underline) markdown-font-lock-keywords)))
+
+(add-hook 'markdown-mode-hook 'my-markdown-mode-hook)
 
 (load-file custom-file)
+
