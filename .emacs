@@ -10,6 +10,7 @@
 	tab-width 4
 	standard-indent 4
 	indent-tabs-mode t
+	fill-column 80
 	tab-always-indent nil
 	ring-bell-function 'ignore)
 
@@ -30,6 +31,7 @@
 
 (rc/require-theme 'gruber-darker)
 (rc/require 'company)
+(rc/require 'magit)
 (rc/require 'web-mode)
 (rc/require 'typescript-mode)
 (rc/require 'move-text)
@@ -42,6 +44,7 @@
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
 (global-company-mode)
+(global-display-fill-column-indicator-mode)
 (set-frame-font "MonoLisa 15" nil t)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (setq scroll-conservatively 101)
@@ -52,7 +55,6 @@
 (setq typescript-indent-level 2)
 (setq css-indent-offset 2)
 (setq sgml-basic-offset 2)
-
 
 ; keymapping
 (global-set-key (kbd "M-p")         'move-text-up)
