@@ -1,94 +1,106 @@
 #!/bin/bash
 
-# Actualizar el sistema
-echo "Actualizando el sistema..."
-sudo apt update && sudo apt upgrade -y
+ORIGINAL_DIR=$(pwd)
+SOURCE_PATH="$HOME/sources"
+BINARY_PATH="/usr/local/bin"
 
-# Instalar paquetes esenciales
-echo "Instalando paquetes esenciales..."
-sudo apt install -y \
-        build-essential \
-        stow \
-        curl \
-        git \
-        dkms \
-        maim \
-        linux-headers-$(uname -r) \
-        htop \
-        unzip \
-        tmux \
-        nodejs \
-        npm \
-        gcc \
-        make \
-        clang \
-        pipewire \
-        pipewire-audio \
-        pipewire-pulse \
-        piperwire-audio-client-libraries \
-        wireplumber \
-        alsa-utils \
-        xorg \
-        libx11-dev \
-        libxext-dev \
-        libxft-dev \
-        xclip \
-        iwd \
-        pkg-config \
-        libxinerama-dev
-        # libssl-dev \
-        # libffi-dev \
-        # libsqlite3-dev \
-        # libbz2-dev \
-        # libreadline-dev
+set -euo pipefail
 
-# instalar dotfiles
-echo "Instalando dotfiles"
-cd ~
-git clone https://github.com/AGomezCuervo/dotfiles.git
-cd dotfiles
-stow --adopt .
+if [ "$EUID" -ne 0 ]; then
+  echo "Error: This script should be executed with root privileges." >&2
+  exit 1
+fi
 
-# Instalar suckless
-echo "Instalando suckless"
-cd ~/.config/suckless/dwm/src
-sudo make clean install
+mkdir -p "$SOURCE_PATH"
 
-cd ~/.config/suckless/st/
-sudo make clean install
+apt update && apt upgrade -y
 
-cd ~/.config/slstatus
-sudo make clean install
+apt install -y \
+	build-essential \
+	stow \
+	curl \
+	git \
+	dkms \
+	linux-headers-$(uname -r) \
+	btop \
+	unzip \
+	tmux \
+	nodejs \
+	npm \
+	gcc \
+	make \
+	clang \
+	gdb \
+	pipewire \
+	pipewire-audio \
+	pipewire-pulse \
+	piperwire-audio-client-libraries \
+	wireplumber \
+	alsa-utils \
+	wmenu \
+	foot \
+	chromium \
 
-cd ~/.config/scroll
-sudo make clean install
+	libinput-dev \
+	libwayland-dev \
+	libwlroots-0.18-dev \
+	libxkbcommon-dev \
+	wayland-protocols \
+	pkg-config \
+	libfcft-dev \
+    libpixman-1-dev \
 
-# Instalar Neovim
-echo "Instalando Neovim"
-sudo mkdir -p /usr/local/bin && cd /usr/local/bin
-curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim-linux64.tar.gz 
-tar xzvf nvim-linux64.tar.gz
-rm nvim-linux64.tar.gz
-sudo ln -s ./nvim-linux64/bin/nvim ./nvim
+	libxcb1-dev \
+	libxcb-util-dev \
+	libxcb-icccm4-dev \
+	xwayland \
 
+	cd "$HOME/dotfiles"
+	stow --adopt .
+	cd "$SOURCE_PATH"
 
-# Instalar aplicaciones graficas
-echo "Instalando aplicaciones gráficas..."
-sudo apt install -y \
-        vlc \
-        firefox-esr \
+# Installing neovim
+mkdir -p "${BINARY_PATH}"
+curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.tar.gz
+tar xzvf nvim-linux-x86_64.tar.gz
+rm nvim-linux-x86_64.tar.gz
+ln -s ./nvim-linux-x86_64/bin/nvim "${BINARY_PATH}"/nvim
 
-#Instalar nvidia drivers
-sudo apt install -y \
+# Installing dwl
+git clone https://codeberg.org/dwl/dwl.git
+(
+	cd dwl
+	git checkout 0.7
+	curl -LO https://codeberg.org/dwl/dwl-patches/raw/branch/main/patches/bar/bar-0.7.patch
+	git apply bar-0.7.patch
+	sed -i "s/firefox\w*/chromium/i" ./config.def.h
+	sed -i "s/ALT$/LOGO/" ./config.def.h
+	sed -i "s/#X/X/" ./config.mk
+	make config.h install
+)
+
+# Extras
+git clone https://github.com/JPGomezCuervo/calculator.git
+(
+	cd calculator
+	make install
+)
+
+git clone https://github.com/nakst/gf.git
+(
+	./build.sh
+	mv ./gf2 "$BINARY_PATH"
+)
+
+# Nvidia
+apt install -y \
         nvidia-detect \
         nvidia-driver \
 
-# Limpiar el sistema después de la instalación
-echo "Limpiando el sistema..."
-sudo apt autoremove -y
-sudo apt clean
+apt autoremove -y
+apt clean
 
-# Finalización
-echo "Instalación completada. Por favor, reinicie su sistema para que los cambios tengan efecto."
+echo "Installation completed. Restart the computer"
+cd "$ORIGINAL_DIR" 
 
 exit 0
