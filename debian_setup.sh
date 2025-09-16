@@ -88,6 +88,7 @@ git clone https://github.com/JPGomezCuervo/calculator.git
 
 git clone https://github.com/nakst/gf.git
 (
+	cd gf
 	./build.sh
 	mv ./gf2 "$BINARY_PATH"
 )

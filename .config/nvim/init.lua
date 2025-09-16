@@ -13,7 +13,7 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 
 vim.opt.winborder = "rounded"
-vim.o.signcolumn = "yes"
+vim.o.signcolumn  = "yes"
 vim.opt.guicursor = ""
 vim.o.colorcolumn = "90"
 
@@ -45,9 +45,11 @@ vim.pack.add({
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/agomezcuervo/align.nvim" },
 })
 
-require "mason".setup()
+require ("align").setup()
+require ("mason").setup()
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "typescript", "vue", "lua", "c" },
 	sync_install = false,
@@ -60,8 +62,7 @@ require("nvim-treesitter.configs").setup({
 	modules = {}
 })
 
-
-vim.lsp.enable({"lua_ls", "vtsls"})
+vim.lsp.enable({"lua_ls", "vtsls", "vue_ls"})
 
 vim.lsp.config("lua_ls", {
 	settings = {
@@ -73,7 +74,24 @@ vim.lsp.config("lua_ls", {
 	}
 })
 
-vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { noremap = true, silent = true })
+vim.lsp.config("vtsls", {
+	settings = {
+		vtsls = {
+			tsserver = {
+				globalPlugin = {
+					{
+						name = "@vue/typescript-plugin",
+						location = vim.fn.expand "$MASON/packages" .. "/vue-language-server" .. "/node_modules/@vue/language-server",
+						languages = {"vue"},
+						configNamespace = "typescript"
+					}
+				}
+			}
+		}
+	},
+	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue"},
+})
 
+vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { noremap = true, silent = true })
 vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 vim.cmd("colorscheme minioding")
